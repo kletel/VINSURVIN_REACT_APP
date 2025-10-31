@@ -34,6 +34,7 @@ function getApiBaseUrl() {
     if (hostname === 'vinsurvin.vitissia.fr') return 'https://vinsurvin.vitissia.fr';
 
     return `https://vinsurvin.vitissia.fr`;
+    /*return `http://localhost:80`;*/
 }
 
 const config = { apiBaseUrl: getApiBaseUrl() };

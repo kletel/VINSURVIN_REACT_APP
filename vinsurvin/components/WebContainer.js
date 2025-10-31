@@ -16,7 +16,6 @@ const WebContainer = ({ token, deviceId, nomUser, uuidUser }) => {
         var nu = ${JSON.stringify(nomUser || '')};
         var uu = ${JSON.stringify(uuidUser || '')};
 
-        // marquer l'hébergement app
         localStorage.setItem('APP_HOST','rn');
         sessionStorage.setItem('APP_HOST','rn');
 
@@ -37,7 +36,6 @@ const WebContainer = ({ token, deviceId, nomUser, uuidUser }) => {
           sessionStorage.setItem('nom_user', nu);
         }
 
-        // notifie le SPA (login web fait pareil)
         window.dispatchEvent(new Event('app-auth-changed'));
         if (window.onReceiveDeviceUUID) window.onReceiveDeviceUUID(d);
       } catch(e){ console.error(e); }
@@ -56,7 +54,6 @@ const WebContainer = ({ token, deviceId, nomUser, uuidUser }) => {
             const message = JSON.parse(event.nativeEvent.data);
 
             if (message.type === 'LOGOUT') {
-                // purge côté app quand le web (dans la WebView) déclenche un logout
                 await SecureStore.deleteItemAsync('token');
                 await SecureStore.deleteItemAsync('uuid_user');
                 await SecureStore.deleteItemAsync('nom_user');
@@ -75,6 +72,7 @@ const WebContainer = ({ token, deviceId, nomUser, uuidUser }) => {
     };
 
     const WEB_URL = 'https://vinsurvin.vitissia.fr/';
+    /*const WEB_URL = 'http://localhost:3006';*/
 
     console.log('[WebView] URL:', WEB_URL);
     console.log(
