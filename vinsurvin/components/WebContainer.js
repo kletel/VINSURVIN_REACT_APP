@@ -1,9 +1,10 @@
 import React, { useEffect, useMemo, useRef } from 'react';
 import { WebView } from 'react-native-webview';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { View, ActivityIndicator } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
-import { CacheManager } from '../services/cacheManager'; 
-import config from '../config/config'; 
+import { CacheManager } from '../services/cacheManager';
+import config from '../config/config';
 
 const WebContainer = ({ token, deviceId, nomUser, uuidUser }) => {
     const webviewRef = useRef(null);
@@ -83,23 +84,28 @@ const WebContainer = ({ token, deviceId, nomUser, uuidUser }) => {
     );
 
     return (
-        <View style={{ flex: 1 }}>
-            <WebView
-                onLoadEnd={() => {
-                    console.log('[WebView] onLoadEnd');
-                }}
-                onError={e => console.warn('[WebView] onError', e.nativeEvent)}
-                ref={webviewRef}
-                source={{ uri: WEB_URL }}
-                javaScriptEnabled
-                domStorageEnabled
-                onMessage={onMessage}
-                startInLoadingState
-                renderLoading={() => <ActivityIndicator style={{ marginTop: 50 }} />}
-                injectedJavaScriptBeforeContentLoaded={injectedJS}
-                injectedJavaScript={injectedJS}
-            />
-        </View>
+        <SafeAreaView
+            style={{ flex: 1, backgroundColor: '#fff' }}
+            edges={['top', 'left', 'right', 'bottom']}
+        >
+            <View style={{ flex: 1 }}>
+                <WebView
+                    onLoadEnd={() => {
+                        console.log('[WebView] onLoadEnd');
+                    }}
+                    onError={e => console.warn('[WebView] onError', e.nativeEvent)}
+                    ref={webviewRef}
+                    source={{ uri: WEB_URL }}
+                    javaScriptEnabled
+                    domStorageEnabled
+                    onMessage={onMessage}
+                    startInLoadingState
+                    renderLoading={() => <ActivityIndicator style={{ marginTop: 50 }} />}
+                    injectedJavaScriptBeforeContentLoaded={injectedJS}
+                    injectedJavaScript={injectedJS}
+                />
+            </View>
+        </SafeAreaView>
     );
 };
 
