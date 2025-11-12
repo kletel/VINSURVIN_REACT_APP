@@ -1,12 +1,13 @@
 import React, { useEffect, useMemo, useRef } from 'react';
 import { WebView } from 'react-native-webview';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { View, ActivityIndicator } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View, ActivityIndicator, Platform } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import { CacheManager } from '../services/cacheManager';
 import config from '../config/config';
 
 const WebContainer = ({ token, deviceId, nomUser, uuidUser }) => {
+    const insets = useSafeAreaInsets();
     const webviewRef = useRef(null);
 
     const buildInjection = () => `
@@ -88,12 +89,15 @@ const WebContainer = ({ token, deviceId, nomUser, uuidUser }) => {
             style={{ flex: 1, backgroundColor: '#fff' }}
             edges={['top', 'left', 'right', 'bottom']}
         >
-            <View style={{ flex: 1 }}>
+            <View
+                style={{
+                    flex: 1,
+                    paddingTop: insets.top,       
+                    paddingBottom: insets.bottom, 
+                    backgroundColor: '#fff',
+                }}
+            >
                 <WebView
-                    onLoadEnd={() => {
-                        console.log('[WebView] onLoadEnd');
-                    }}
-                    onError={e => console.warn('[WebView] onError', e.nativeEvent)}
                     ref={webviewRef}
                     source={{ uri: WEB_URL }}
                     javaScriptEnabled
@@ -103,6 +107,7 @@ const WebContainer = ({ token, deviceId, nomUser, uuidUser }) => {
                     renderLoading={() => <ActivityIndicator style={{ marginTop: 50 }} />}
                     injectedJavaScriptBeforeContentLoaded={injectedJS}
                     injectedJavaScript={injectedJS}
+                    bounces={false}
                 />
             </View>
         </SafeAreaView>
