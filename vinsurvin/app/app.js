@@ -10,7 +10,7 @@ export default function App() {
     <SafeAreaProvider>
       <AuthProvider>
         <StatusBar
-          barStyle="light-content"
+          barStyle="dark-content" 
           translucent={false}
           backgroundColor={Platform.OS === 'android' ? '#000' : undefined}
         />

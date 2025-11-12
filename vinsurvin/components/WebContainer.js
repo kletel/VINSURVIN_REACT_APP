@@ -91,10 +91,7 @@ const WebContainer = ({ token, deviceId, nomUser, uuidUser }) => {
         >
             <View
                 style={{
-                    flex: 1,
-                    paddingTop: insets.top,       
-                    paddingBottom: insets.bottom, 
-                    backgroundColor: '#fff',
+                    flex: 1
                 }}
             >
                 <WebView
