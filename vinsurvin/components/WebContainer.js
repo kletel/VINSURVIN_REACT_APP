@@ -104,6 +104,9 @@ const WebContainer = ({ token, deviceId, nomUser, uuidUser }) => {
                     renderLoading={() => <ActivityIndicator style={{ marginTop: 50 }} />}
                     injectedJavaScriptBeforeContentLoaded={injectedJS}
                     injectedJavaScript={injectedJS}
+                    automaticallyAdjustContentInsets={false}
+                    contentInset={{ top: 0, bottom: 0, left: 0, right: 0 }}
+                    contentInsetAdjustmentBehavior="never"
                     bounces={false}
                 />
             </View>
