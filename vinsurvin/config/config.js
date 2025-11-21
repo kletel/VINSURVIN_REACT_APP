@@ -37,7 +37,7 @@ function getApiBaseUrl() {
     /*return `http://localhost:80`;*/
 }
 
-const config = { apiBaseUrl: getApiBaseUrl() };
+const config = { apiBaseUrl: 'https://vinsurvin.vitissia.fr'};
 
 console.log('API Base URL:', config.apiBaseUrl);
 

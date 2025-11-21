@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { View, Text } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
+import { useContext, useEffect, useState } from 'react';
+import { Text, View } from 'react-native';
 import WebContainer from '../components/WebContainer';
 import { AuthContext } from '../contexts/AuthContext';
 import { NetInfoService } from '../services/netInfoService';
@@ -14,17 +14,13 @@ export default function MainScreen() {
     const [uuidUser, setUuidUser] = useState(null);
 
     useEffect(() => {
-        const unsubscribe = NetInfoService.subscribe((online) => {
-            console.log('[NetInfo] online?', online);
-            setIsOnline(online);
-        });
-        return unsubscribe;
+        const unsub = NetInfoService.subscribe((online) => setIsOnline(online));
+        return unsub;
     }, []);
 
     useEffect(() => {
         (async () => {
             const id = await getOrCreateDeviceId();
-            console.log('[MainScreen] deviceId ready:', id);
             setDeviceId(id);
 
             const n = await SecureStore.getItemAsync('nom_user');
@@ -63,8 +59,8 @@ export default function MainScreen() {
         <WebContainer
             token={token}
             deviceId={deviceId}
-            nomUser={nomUser}
-            uuidUser={uuidUser}
+            nomUser={nomUser}   
+            uuidUser={uuidUser} 
         />
     );
 }

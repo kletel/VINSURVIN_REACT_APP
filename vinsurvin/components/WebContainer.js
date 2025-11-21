@@ -1,48 +1,65 @@
-import React, { useEffect, useMemo, useRef } from 'react';
-import { WebView } from 'react-native-webview';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { View, ActivityIndicator, Platform } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
+import { useEffect, useMemo, useRef } from 'react';
+import { ActivityIndicator, View } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { WebView } from 'react-native-webview';
 import { CacheManager } from '../services/cacheManager';
-import config from '../config/config';
 
 const WebContainer = ({ token, deviceId, nomUser, uuidUser }) => {
     const insets = useSafeAreaInsets();
     const webviewRef = useRef(null);
 
     const buildInjection = () => `
-    (function(){
-      try {
-        var t  = ${JSON.stringify(token || '')};
-        var d  = ${JSON.stringify(deviceId || '')};
-        var nu = ${JSON.stringify(nomUser || '')};
-        var uu = ${JSON.stringify(uuidUser || '')};
+      (function() {
+        try {
+          var t  = ${JSON.stringify(token || '')};
+          var d  = ${JSON.stringify(deviceId || '')};
+          var nu = ${JSON.stringify(nomUser || '')};
+          var uu = ${JSON.stringify(uuidUser || '')};
 
-        localStorage.setItem('APP_HOST','rn');
-        sessionStorage.setItem('APP_HOST','rn');
+          // Debug vers React Native
+          if (window.ReactNativeWebView) {
+            window.ReactNativeWebView.postMessage(JSON.stringify({
+              type: 'DEBUG_INJECTION',
+              tokenPresent: !!t,
+              deviceUUID: d,
+              nomUser: nu,
+              uuidUser: uu
+            }));
+          }
 
-        if (t) {
-          localStorage.setItem('token', t);
-          sessionStorage.setItem('token', t);
-        }
-        if (d) {
-          localStorage.setItem('deviceUUID', d);
-          sessionStorage.setItem('deviceUUID', d);
-        }
-        if (uu) {
-          localStorage.setItem('uuid_user', uu);
-          sessionStorage.setItem('uuid_user', uu);
-        }
-        if (nu) {
-          localStorage.setItem('nom_user', nu);
-          sessionStorage.setItem('nom_user', nu);
-        }
+          localStorage.setItem('APP_HOST','rn');
+          sessionStorage.setItem('APP_HOST','rn');
 
-        window.dispatchEvent(new Event('app-auth-changed'));
-        if (window.onReceiveDeviceUUID) window.onReceiveDeviceUUID(d);
-      } catch(e){ console.error(e); }
-    })(); true;
-  `;
+          if (d) {
+            localStorage.setItem('deviceUUID', d);
+            sessionStorage.setItem('deviceUUID', d);
+          }
+          if (t) {
+            localStorage.setItem('token', t);
+            sessionStorage.setItem('token', t);
+          }
+          if (uu) {
+            localStorage.setItem('uuid_user', uu);
+            sessionStorage.setItem('uuid_user', uu);
+          }
+          if (nu) {
+            localStorage.setItem('nom_user', nu);
+            sessionStorage.setItem('nom_user', nu);
+          }
+
+          window.dispatchEvent(new Event('app-auth-changed'));
+        } catch (e) {
+          if (window.ReactNativeWebView) {
+            window.ReactNativeWebView.postMessage(JSON.stringify({
+              type: 'DEBUG_INJECTION_ERROR',
+              message: e.message
+            }));
+          }
+        }
+      })();
+      true;
+    `;
 
     const injectedJS = useMemo(buildInjection, [token, deviceId, nomUser, uuidUser]);
 
@@ -54,6 +71,15 @@ const WebContainer = ({ token, deviceId, nomUser, uuidUser }) => {
     const onMessage = async (event) => {
         try {
             const message = JSON.parse(event.nativeEvent.data);
+
+            if (message.type === 'DEBUG_INJECTION') {
+                console.log('[INJECTION DEBUG]', message);
+                return;
+            }
+            if (message.type === 'DEBUG_INJECTION_ERROR') {
+                console.log('[INJECTION ERROR]', message.message);
+                return;
+            }
 
             if (message.type === 'LOGOUT') {
                 await SecureStore.deleteItemAsync('token');
@@ -86,7 +112,7 @@ const WebContainer = ({ token, deviceId, nomUser, uuidUser }) => {
 
     return (
         <SafeAreaView
-            style={{ flex: 1, backgroundColor: '#fff' }}
+            style={{ flex: 1, backgroundColor: '#000000' }}
             edges={['top', 'left', 'right', 'bottom']}
         >
             <View

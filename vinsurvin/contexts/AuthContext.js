@@ -1,7 +1,7 @@
-import React, { createContext, useEffect, useState } from 'react';
 import * as SecureStore from 'expo-secure-store';
-import { getOrCreateDeviceId } from '../utils/deviceId';
+import { createContext, useEffect, useState } from 'react';
 import { AuthService } from '../services/authService';
+import { getOrCreateDeviceId } from '../utils/deviceId';
 
 export const AuthContext = createContext();
 

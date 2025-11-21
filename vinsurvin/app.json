@@ -12,7 +12,9 @@
       "supportsTablet": true,
       "bundleIdentifier": "fr.vitissia.vinsurvin",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSCameraUsageDescription": "Cette application utilise la caméra pour prendre des photos de vos bouteilles.",
+        "NSPhotoLibraryUsageDescription": "Cette application accède à votre bibliothèque pour sélectionner des photos."
       }
     },
     "android": {
@@ -24,7 +26,11 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "fr.vitissia.vinsurvin"
+      "package": "fr.vitissia.vinsurvin",
+       "permissions": [
+        "CAMERA",
+        "READ_MEDIA_IMAGES"
+      ]
     },
     "web": {
       "output": "static",

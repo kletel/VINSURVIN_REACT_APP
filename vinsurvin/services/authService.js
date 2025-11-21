@@ -1,6 +1,6 @@
 import * as SecureStore from 'expo-secure-store';
-import { getOrCreateDeviceId } from '../utils/deviceId';
 import config from '../config/config';
+import { getOrCreateDeviceId } from '../utils/deviceId';
 
 async function debugResponse(tag, res) {
     console.log(`[${tag}] status=`, res.status, res.statusText);
@@ -96,7 +96,33 @@ export const AuthService = {
 
     async logout() {
         try {
+            const deviceUUID = await SecureStore.getItemAsync('deviceUUID');
+            const token = await SecureStore.getItemAsync('token');
+
+            // On informe 4D pour couper le lien device <-> user
+            if (deviceUUID && token) {
+                const formData = new FormData();
+                formData.append('deviceUUID', deviceUUID);
+
+                try {
+                    const res = await fetch(`${config.apiBaseUrl}/4DACTION/react_logoutDevice`, {
+                        method: 'POST',
+                        headers: { Authorization: token },
+                        body: formData,
+                    });
+                    console.log('[LOGOUT] react_logoutDevice status =', res.status);
+                    const txt = await res.text();
+                    console.log('[LOGOUT] react_logoutDevice body =', txt);
+                } catch (e) {
+                    console.warn('[LOGOUT] erreur appel react_logoutDevice:', e);
+                }
+            }
+
+            // On nettoie le SecureStore (mais on laisse deviceUUID pour de futurs logins)
             await SecureStore.deleteItemAsync('token');
+            await SecureStore.deleteItemAsync('uuid_user');
+            await SecureStore.deleteItemAsync('nom_user');
+
         } catch (err) {
             console.error('Erreur logout:', err);
         }
