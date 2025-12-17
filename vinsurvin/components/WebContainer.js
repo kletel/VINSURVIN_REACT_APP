@@ -112,12 +112,13 @@ const WebContainer = ({ token, deviceId, nomUser, uuidUser }) => {
 
     return (
         <SafeAreaView
-            style={{ flex: 1, backgroundColor: '#000000' }}
-            edges={['top', 'left', 'right', 'bottom']}
+            style={{ flex: 1, backgroundColor: '#8C2438' }}
+            edges={['left', 'right']}
         >
             <View
                 style={{
-                    flex: 1
+                    flex: 1,
+                    paddingTop: 60,
                 }}
             >
                 <WebView

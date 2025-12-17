@@ -4,7 +4,7 @@
     "slug": "vinsurvin",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./public/vitissia_LOGO.png",
+    "icon": "./public/newLogo.png",
     "scheme": "vinsurvin",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -13,6 +13,7 @@
       "bundleIdentifier": "fr.vitissia.vinsurvin",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
+        "CFBundleDevelopmentRegion": "fr",
         "NSCameraUsageDescription": "Cette application utilise la caméra pour prendre des photos de vos bouteilles.",
         "NSPhotoLibraryUsageDescription": "Cette application accède à votre bibliothèque pour sélectionner des photos."
       }
@@ -34,7 +35,7 @@
     },
     "web": {
       "output": "static",
-      "favicon": "./public/vitissia_LOGO.png"
+      "favicon": "./public/newLogo.png"
     },
     "plugins": [
       "expo-router",
